@@ -3,16 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>倒數計食 - Notion 風格啟動畫面</title>
+    <title>倒數計食 - 啟動畫面</title>
     <style>
+        /* 匯入 Google Fonts 的 Inter 字型 */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         
+        /* 全域樣式重設 */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
         
+        /* 設定 body 背景、字型、置中 */
         body {
             font-family: 'Inter', "微軟正黑體", sans-serif;
             background: linear-gradient(135deg, #F7FAFC 0%, #FFF8E1 100%);
@@ -24,6 +27,7 @@
             color: #37352F;
         }
         
+        /* splash 主容器 */
         .splash-container {
             display: flex;
             flex-direction: column;
@@ -35,6 +39,7 @@
             padding: 20px;
         }
         
+        /* logo 外層容器，淡入動畫 */
         .logo-container {
             margin-bottom: 40px;
             position: relative;
@@ -42,6 +47,7 @@
             animation: fadeIn 1s ease-out forwards;
         }
         
+        /* logo 樣式 */
         .logo {
             width: 80px;
             height: 80px;
@@ -53,16 +59,19 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
         
+        /* SVG 圖示大小 */
         .logo svg {
             width: 50px;
             height: 50px;
         }
         
+        /* 時針動畫 */
         .clock-hand {
             transform-origin: center;
             animation: rotate 3s linear infinite;
         }
         
+        /* 標題樣式，淡入動畫 */
         .app-title {
             font-size: 32px;
             font-weight: 700;
@@ -72,12 +81,14 @@
             letter-spacing: -0.5px;
         }
         
+        /* 載入條容器，淡入動畫 */
         .loading-container {
             width: 100%;
             opacity: 0;
             animation: fadeIn 1s ease-out 0.7s forwards;
         }
         
+        /* 載入進度標籤（左：文字，右：百分比） */
         .loading-label {
             display: flex;
             justify-content: space-between;
@@ -86,6 +97,7 @@
             color: #6B7280;
         }
         
+        /* 載入條背景 */
         .loading-bar {
             width: 100%;
             height: 6px;
@@ -94,6 +106,7 @@
             overflow: hidden;
         }
         
+        /* 載入條進度（動畫） */
         .loading-progress {
             height: 100%;
             width: 0%;
@@ -102,6 +115,7 @@
             animation: loading 2.5s ease-in-out forwards;
         }
         
+        /* 淡入動畫 keyframes */
         @keyframes fadeIn {
             0% { 
                 opacity: 0;
@@ -113,6 +127,7 @@
             }
         }
         
+        /* 載入條動畫 keyframes */
         @keyframes loading {
             0% { width: 0%; }
             20% { width: 20%; }
@@ -122,6 +137,7 @@
             100% { width: 100%; }
         }
         
+        /* 時針旋轉動畫 keyframes */
         @keyframes rotate {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
@@ -130,8 +146,10 @@
 </head>
 <body>
     <div class="splash-container">
+        <!-- logo 區塊 -->
         <div class="logo-container">
             <div class="logo">
+                <!-- 時鐘 SVG 圖示 -->
                 <svg viewBox="0 0 24 24" fill="none" stroke="#37352F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="12" cy="12" r="10"></circle>
                     <polyline points="12 6 12 12 16 14" class="clock-hand"></polyline>
@@ -139,8 +157,10 @@
             </div>
         </div>
         
+        <!-- 標題 -->
         <h1 class="app-title">倒數計食</h1>
         
+        <!-- 載入進度條區塊 -->
         <div class="loading-container">
             <div class="loading-label">
                 <span>載入中</span>
@@ -153,12 +173,13 @@
     </div>
 
     <script>
-        // 更新進度文字
+        // 取得進度條與百分比文字的 DOM
         const progressBar = document.getElementById('progress-bar');
         const progressText = document.getElementById('progress-text');
         
-        // 模擬進度更新
+        // 模擬進度更新動畫
         const updateProgress = () => {
+            // 定義進度條動畫的關鍵幀
             const keyframes = [
                 { width: '0%', offset: 0 },
                 { width: '20%', offset: 0.2 },
@@ -169,14 +190,15 @@
             ];
             
             let startTime = null;
-            const duration = 3000; // 3秒
+            const duration = 3000; // 動畫總長 3 秒
             
+            // 動畫主函式
             function animate(timestamp) {
                 if (!startTime) startTime = timestamp;
                 const elapsed = timestamp - startTime;
                 const progress = Math.min(elapsed / duration, 1);
                 
-                // 找到當前關鍵幀
+                // 找到目前進度所屬的關鍵幀
                 let currentFrame = keyframes[0];
                 let nextFrame = keyframes[1];
                 
@@ -188,22 +210,23 @@
                     }
                 }
                 
-                // 計算當前幀和下一幀之間的插值
+                // 計算目前進度條寬度（插值）
                 const frameProgress = (progress - currentFrame.offset) / (nextFrame.offset - currentFrame.offset);
                 const currentWidth = parseInt(currentFrame.width);
                 const nextWidth = parseInt(nextFrame.width);
                 const interpolatedWidth = currentWidth + (nextWidth - currentWidth) * frameProgress;
                 
-                // 更新進度條和文字
+                // 更新進度條寬度與百分比文字
                 progressBar.style.width = `${interpolatedWidth}%`;
                 progressText.textContent = `${Math.round(interpolatedWidth)}%`;
                 
                 if (progress < 1) {
+                    // 尚未結束，繼續動畫
                     requestAnimationFrame(animate);
                 } else {
-                    // 完成後的行為
+                    // 動畫結束後的行為
                     setTimeout(() => {
-                        // 在實際應用中，這裡會跳轉到主畫面
+                        // 這裡可加入跳轉主畫面等行為
                         document.querySelector('.splash-container').style.opacity = 0;
                         document.querySelector('.splash-container').style.transition = 'opacity 0.5s ease-out';
                     }, 500);
@@ -213,7 +236,7 @@
             requestAnimationFrame(animate);
         };
         
-        // 啟動進度更新
+        // 延遲 0.5 秒後啟動進度動畫
         setTimeout(updateProgress, 500);
     </script>
 </body>
