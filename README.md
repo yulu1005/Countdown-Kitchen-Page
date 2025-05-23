@@ -4,7 +4,7 @@
 
 ## Demo
 
-👉 [點我觀看 Demo]([https://yulu1005.github.io/Countdown-Kitchen-Page/splash.html])
+👉 [點我觀看 Demo](https://yulu1005.github.io/Countdown-Kitchen-Page/splash.html)
 
 ## 說明
 
