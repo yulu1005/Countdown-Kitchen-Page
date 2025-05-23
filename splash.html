@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>倒數計食 - Notion 風格啟動畫面</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', "微軟正黑體", sans-serif;
+            background: linear-gradient(135deg, #F7FAFC 0%, #FFF8E1 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            color: #37352F;
+        }
+        
+        .splash-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            max-width: 500px;
+            padding: 20px;
+        }
+        
+        .logo-container {
+            margin-bottom: 40px;
+            position: relative;
+            opacity: 0;
+            animation: fadeIn 1s ease-out forwards;
+        }
+        
+        .logo {
+            width: 80px;
+            height: 80px;
+            background-color: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+        
+        .logo svg {
+            width: 50px;
+            height: 50px;
+        }
+        
+        .clock-hand {
+            transform-origin: center;
+            animation: rotate 3s linear infinite;
+        }
+        
+        .app-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 40px;
+            opacity: 0;
+            animation: fadeIn 1s ease-out 0.3s forwards;
+            letter-spacing: -0.5px;
+        }
+        
+        .loading-container {
+            width: 100%;
+            opacity: 0;
+            animation: fadeIn 1s ease-out 0.7s forwards;
+        }
+        
+        .loading-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #6B7280;
+        }
+        
+        .loading-bar {
+            width: 100%;
+            height: 6px;
+            background-color: #EAECEF;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .loading-progress {
+            height: 100%;
+            width: 0%;
+            background-color: #37352F;
+            border-radius: 3px;
+            animation: loading 2.5s ease-in-out forwards;
+        }
+        
+        @keyframes fadeIn {
+            0% { 
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            100% { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes loading {
+            0% { width: 0%; }
+            20% { width: 20%; }
+            40% { width: 40%; }
+            60% { width: 65%; }
+            80% { width: 85%; }
+            100% { width: 100%; }
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="splash-container">
+        <div class="logo-container">
+            <div class="logo">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#37352F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14" class="clock-hand"></polyline>
+                </svg>
+            </div>
+        </div>
+        
+        <h1 class="app-title">倒數計食</h1>
+        
+        <div class="loading-container">
+            <div class="loading-label">
+                <span>載入中</span>
+                <span id="progress-text">0%</span>
+            </div>
+            <div class="loading-bar">
+                <div class="loading-progress" id="progress-bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 更新進度文字
+        const progressBar = document.getElementById('progress-bar');
+        const progressText = document.getElementById('progress-text');
+        
+        // 模擬進度更新
+        const updateProgress = () => {
+            const keyframes = [
+                { width: '0%', offset: 0 },
+                { width: '20%', offset: 0.2 },
+                { width: '40%', offset: 0.4 },
+                { width: '65%', offset: 0.6 },
+                { width: '85%', offset: 0.8 },
+                { width: '100%', offset: 1 }
+            ];
+            
+            let startTime = null;
+            const duration = 3000; // 3秒
+            
+            function animate(timestamp) {
+                if (!startTime) startTime = timestamp;
+                const elapsed = timestamp - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                // 找到當前關鍵幀
+                let currentFrame = keyframes[0];
+                let nextFrame = keyframes[1];
+                
+                for (let i = 0; i < keyframes.length - 1; i++) {
+                    if (progress >= keyframes[i].offset && progress <= keyframes[i + 1].offset) {
+                        currentFrame = keyframes[i];
+                        nextFrame = keyframes[i + 1];
+                        break;
+                    }
+                }
+                
+                // 計算當前幀和下一幀之間的插值
+                const frameProgress = (progress - currentFrame.offset) / (nextFrame.offset - currentFrame.offset);
+                const currentWidth = parseInt(currentFrame.width);
+                const nextWidth = parseInt(nextFrame.width);
+                const interpolatedWidth = currentWidth + (nextWidth - currentWidth) * frameProgress;
+                
+                // 更新進度條和文字
+                progressBar.style.width = `${interpolatedWidth}%`;
+                progressText.textContent = `${Math.round(interpolatedWidth)}%`;
+                
+                if (progress < 1) {
+                    requestAnimationFrame(animate);
+                } else {
+                    // 完成後的行為
+                    setTimeout(() => {
+                        // 在實際應用中，這裡會跳轉到主畫面
+                        document.querySelector('.splash-container').style.opacity = 0;
+                        document.querySelector('.splash-container').style.transition = 'opacity 0.5s ease-out';
+                    }, 500);
+                }
+            }
+            
+            requestAnimationFrame(animate);
+        };
+        
+        // 啟動進度更新
+        setTimeout(updateProgress, 500);
+    </script>
+</body>
+</html>
