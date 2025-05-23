@@ -79,6 +79,7 @@
             opacity: 0;
             animation: fadeIn 1s ease-out 0.3s forwards;
             letter-spacing: -0.5px;
+            font-family: 'Inter', 'Noto Sans TC', 'PingFang TC', 'Heiti TC', sans-serif;
         }
         
         /* 載入條容器，淡入動畫 */
@@ -147,18 +148,16 @@
 <body>
     <div class="splash-container">
         <!-- logo 區塊 -->
-        <div class="logo-container">
-            <div class="logo">
-                <!-- 時鐘 SVG 圖示 -->
-                <svg viewBox="0 0 24 24" fill="none" stroke="#37352F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <polyline points="12 6 12 12 16 14" class="clock-hand"></polyline>
-                </svg>
-            </div>
-        </div>
         
-        <!-- 標題 -->
-        <h1 class="app-title">倒數計食</h1>
+<!-- logo 區塊 -->
+<div class="logo-container">
+    <div class="logo" style="background: none; box-shadow: none;">
+        <img src="images/countdown-icon.png" alt="Countdown Kitchen Icon" style="width: 100px; height: 100px;">
+    </div>
+</div>
+
+<!-- 標題 -->
+<img class="app-title" src="images/text.png" alt="CountDownKitchen" style="width: 320px; margin-bottom: 40px; opacity: 0; animation: fadeIn 1s ease-out 0.3s forwards;">
         
         <!-- 載入進度條區塊 -->
         <div class="loading-container">
